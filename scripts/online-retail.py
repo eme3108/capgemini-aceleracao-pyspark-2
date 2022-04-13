@@ -55,6 +55,12 @@ def question_3_report(df):
 
 	df.select('StockCode', F.round(F.col('ValueTotal'), 2).alias('ValueTotal')).show()
  
+def question_4_report(df):
+	# Question 4 report
+
+	df = df.groupBy('Description').agg(F.sum('Quantity').alias('Quantity'))
+	df.sort(F.desc(F.col('Quantity'))).show(1)
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -82,4 +88,5 @@ if __name__ == "__main__":
 
 	#question_1_report(df)
 	#question_2_report(df)
-	question_3_report(df)
+	#question_3_report(df)
+	question_4_report(df)
