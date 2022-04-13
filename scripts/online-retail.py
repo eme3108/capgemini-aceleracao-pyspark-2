@@ -61,6 +61,22 @@ def question_4_report(df):
 	df = df.groupBy('Description').agg(F.sum('Quantity').alias('Quantity'))
 	df.sort(F.desc(F.col('Quantity'))).show(1)
 
+def question_6_transform(df):
+	# Question 6 transformation;
+
+	df = df.withColumn('InvoiceDateHour', F.hour(F.col('InvoiceDate')))
+
+	return df
+
+def question_6_report(df):
+	# Question 6 report;
+
+	df = question_6_transform(df)
+	df = (df.select('InvoiceDateHour', 'Quantity')
+	       .groupBy('InvoiceDateHour').agg(F.sum('Quantity').alias('QuantityTotal'))
+		   .sort(F.desc(F.col('QuantityTotal'))))
+	df.show()
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -89,4 +105,5 @@ if __name__ == "__main__":
 	#question_1_report(df)
 	#question_2_report(df)
 	#question_3_report(df)
-	question_4_report(df)
+	#question_4_report(df)
+	question_6_report(df)
