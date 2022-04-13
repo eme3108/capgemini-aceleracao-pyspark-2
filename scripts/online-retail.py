@@ -42,16 +42,21 @@ def question_2_report(df):
 
 	df.show()
 
-def question_3_report(df):
-
+def question_3_transform(df):
 	df = df.withColumn('StockCode', F.when(F.col('StockCode').startswith('S'), 'S'))
 
 	df = (df.select(
 				'StockCode', 
 				(F.col('Quantity') * F.col('UnitPrice')).alias('ValueTotal'))
-			.filter(F.col('StockCode') == 'S'))
+			.filter(F.col('StockCode') == 'S')
+			.groupby('StockCode').agg(F.sum(F.col('ValueTotal')).alias('ValueTotal')))
+	
+	return df
 
-	df = df.groupby('StockCode').agg(F.sum(F.col('ValueTotal')).alias('ValueTotal'))
+def question_3_report(df):
+	#Question
+
+	df = question_3_transformation(df)
 
 	df.select('StockCode', F.round(F.col('ValueTotal'), 2).alias('ValueTotal')).show()
  
