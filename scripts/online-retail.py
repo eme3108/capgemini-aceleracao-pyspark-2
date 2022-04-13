@@ -19,6 +19,24 @@ def question_1_report(df):
 		    .filter(F.col('StockCode').isNotNull()))
 
 	df.select('StockCode', F.round(F.col('ValueTotal'), 2).alias('ValueTotal')).show()
+
+def question_2_transform(df):
+	# Question 2 transformation;
+
+	df = (df.withColumn('InvoiceDate', F.to_timestamp(F.col('InvoiceDate'), 'd/MM/yyyy H:m'))
+		    .withColumn('InvoiceMonthDate', F.month(F.col('InvoiceDate'))))
+
+	return df
+
+def question_2_report(df):
+	# Question 2 report;
+		
+	df = question_2_transform(df)
+	df = df.select(
+		'InvoiceMonthDate',
+		(F.round(F.col('Quantity') * F.col('UnitPrice'), 2)).alias('ValueTotal'))
+	df = df.groupby('InvoiceMonthDate').agg(F.sum('ValueTotal').alias('ValueTotal'))
+	df.show()
  
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -45,4 +63,5 @@ if __name__ == "__main__":
 	df = (df.withColumn('UnitPrice', F.regexp_replace(F.col('UnitPrice'), ',', '.').cast('float'))
 		   .withColumn('InvoiceDate', F.to_timestamp(F.col('InvoiceDate'), 'd/MM/yyyy H:m')))
 
-	question_1_report(df)
+	#question_1_report(df)
+	question_2_report(df)
