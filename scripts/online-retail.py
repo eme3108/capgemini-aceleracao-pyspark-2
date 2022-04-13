@@ -43,6 +43,7 @@ def question_2_report(df):
 	df.show()
 
 def question_3_transform(df):
+	# Question 3 transformation;
 	df = df.withColumn('StockCode', F.when(F.col('StockCode').startswith('S'), 'S'))
 
 	df = (df.select(
@@ -54,7 +55,7 @@ def question_3_transform(df):
 	return df
 
 def question_3_report(df):
-	#Question
+	# Question 3 report;
 
 	df = question_3_transformation(df)
 
