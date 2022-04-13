@@ -15,6 +15,7 @@ def question_1_report(df):
 	# Question 1 report;
 
 	df = question_1_transform(df)
+
 	df = (df.groupBy('StockCode').agg(F.sum('ValueTotal').alias('ValueTotal'))
 		    .filter(F.col('StockCode').isNotNull()))
 
@@ -32,11 +33,27 @@ def question_2_report(df):
 	# Question 2 report;
 		
 	df = question_2_transform(df)
+
 	df = df.select(
 		'InvoiceMonthDate',
 		(F.round(F.col('Quantity') * F.col('UnitPrice'), 2)).alias('ValueTotal'))
+
 	df = df.groupby('InvoiceMonthDate').agg(F.sum('ValueTotal').alias('ValueTotal'))
+
 	df.show()
+
+def question_3_report(df):
+
+	df = df.withColumn('StockCode', F.when(F.col('StockCode').startswith('S'), 'S'))
+
+	df = (df.select(
+				'StockCode', 
+				(F.col('Quantity') * F.col('UnitPrice')).alias('ValueTotal'))
+			.filter(F.col('StockCode') == 'S'))
+
+	df = df.groupby('StockCode').agg(F.sum(F.col('ValueTotal')).alias('ValueTotal'))
+
+	df.select('StockCode', F.round(F.col('ValueTotal'), 2).alias('ValueTotal')).show()
  
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -64,4 +81,5 @@ if __name__ == "__main__":
 		   .withColumn('InvoiceDate', F.to_timestamp(F.col('InvoiceDate'), 'd/MM/yyyy H:m')))
 
 	#question_1_report(df)
-	question_2_report(df)
+	#question_2_report(df)
+	question_3_report(df)
