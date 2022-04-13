@@ -2,6 +2,23 @@ from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
+
+def question_1_transform(df):
+	# Question 1 transformation;
+
+	df = (df.withColumn('StockCode', F.when(F.col('StockCode').contains('gift_0001'), 'gift_0001'))
+		    .withColumn('ValueTotal', (F.col('Quantity') * F.col('UnitPrice'))))
+
+	return df
+
+def question_1_report(df):
+	# Question 1 report;
+
+	df = question_1_transform(df)
+	df = (df.groupBy('StockCode').agg(F.sum('ValueTotal').alias('ValueTotal'))
+		    .filter(F.col('StockCode').isNotNull()))
+
+	df.select('StockCode', F.round(F.col('ValueTotal'), 2).alias('ValueTotal')).show()
  
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -27,3 +44,5 @@ if __name__ == "__main__":
 	# Transformation UnitPrice e InvoiceDate
 	df = (df.withColumn('UnitPrice', F.regexp_replace(F.col('UnitPrice'), ',', '.').cast('float'))
 		   .withColumn('InvoiceDate', F.to_timestamp(F.col('InvoiceDate'), 'd/MM/yyyy H:m')))
+
+	question_1_report(df)
