@@ -73,9 +73,24 @@ def question_6_report(df):
 
 	df = question_6_transform(df)
 	df = (df.select('InvoiceDateHour', 'Quantity')
-	       .groupBy('InvoiceDateHour').agg(F.sum('Quantity').alias('QuantityTotal'))
-		   .sort(F.desc(F.col('QuantityTotal'))))
+	       .groupBy('InvoiceDateHour').agg(F.sum('Quantity').alias('TotalQuantity'))
+		   .sort(F.desc(F.col('TotalQuantity'))))
 	df.show()
+
+def question_7_transform(df):
+	# Question 7 transformation;
+
+	df = df.withColumn('InvoiceDateMonth', F.month(F.col('InvoiceDate')))
+
+	return df
+
+def question_7_report(df):
+	# Question 7 report;
+
+	df = question_7_transform(df)
+	df = (df.groupBy('InvoiceDateMonth').agg(F.sum('Quantity').alias('TotalQuantity'))
+		   .sort(F.desc(F.col('TotalQuantity'))))
+	df.show(1)
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -106,4 +121,5 @@ if __name__ == "__main__":
 	#question_2_report(df)
 	#question_3_report(df)
 	#question_4_report(df)
-	question_6_report(df)
+	#question_6_report(df)
+	question_7_report(df)
