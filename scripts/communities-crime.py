@@ -6,7 +6,7 @@ from pyspark.sql.types import StructType, StructField, StringType, IntegerType, 
 def question_1_report(df):
 	# Question 1 report;
 
-	df = (df.groupBy('communityname').agg(F.round(F.sum('PolicOperBudg'), 2).alias('PolicOperBudg'))
+	df = (df.select('communityname', 'PolicOperBudg')
 	        .sort(F.desc('PolicOperBudg')))
 	
 	df.show(1)
@@ -14,8 +14,7 @@ def question_1_report(df):
 def question_2_report(df):
 	# Question 2 report;
 
-	df = (df.groupBy('communityname')
-	        .agg(F.round(F.sum('ViolentCrimesPerPop'), 2).alias('ViolentCrimesPerPop'))
+	df = (df.select('communityname', 'ViolentCrimesPerPop')
 	        .sort(F.desc('ViolentCrimesPerPop')))
 	
 	df.show(1)
@@ -23,8 +22,7 @@ def question_2_report(df):
 def question_3_report(df):
 	# Question 3 report;
 
-	df = (df.groupBy('communityname')
-	        .agg(F.round(F.sum('population'), 2).alias('population'))
+	df = (df.select('communityname', 'population')
 	        .sort(F.desc('population')))
 	
 	df.show(1)
@@ -32,8 +30,7 @@ def question_3_report(df):
 def question_4_report(df):
 	# Question 4 report;
 
-	df = (df.groupBy('communityname')
-	        .agg(F.round(F.sum('racepctblack'), 2).alias('racepctblack'))
+	df = (df.select('communityname', racepctblack)
 	        .sort(F.desc('racepctblack')))
 	
 	df.show(1)
@@ -41,8 +38,7 @@ def question_4_report(df):
 def question_5_report(df):
 	# Question 5 report;
 
-	df = (df.groupBy('communityname')
-	        .agg(F.round(F.sum('pctWWage'), 2).alias('pctWWage'))
+	df = (df.select('communityname', 'pctWWage')
 	        .sort(F.desc('pctWWage')))
 	
 	df.show(1)
@@ -50,8 +46,7 @@ def question_5_report(df):
 def question_6_report(df):
 	# Question 6 report;
 
-	df = (df.groupBy('communityname')
-	        .agg(F.round(F.sum('agePct12t29'), 2).alias('agePct12t29'))
+	df = (df.select('communityname', 'agePct12t29')
 	        .sort(F.desc('agePct12t29')))
 	
 	df.show(1)
