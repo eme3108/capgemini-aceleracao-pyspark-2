@@ -56,6 +56,44 @@ def question_6_report(df):
 	
 	df.show(1)
 
+def question_7_report(df):
+	# Question 7 report;
+
+    df.agg(F.round(F.corr('PolicOperBudg', 'ViolentCrimesPerPop'), 2).alias('Correlation')).show()
+
+def question_8_report(df):
+	# Question 8 report;
+
+    df.agg(F.round(F.corr('PctPolicWhite', 'PolicOperBudg'), 2).alias('Correlation')).show()
+
+def question_9_report(df):
+	# Question 9 report;
+
+    df.agg(F.round(F.corr('population', 'PolicOperBudg'), 2).alias('Correlation')).show()
+
+def question_10_report(df):
+    # Question 10 report;
+
+    df.agg(F.round(F.corr('population', 'ViolentCrimesPerPop'), 2).alias('Correlation')).show()
+
+def question_11_report(df):
+    # Question 11 report;
+
+    df.agg(F.round(F.corr('medIncome', 'ViolentCrimesPerPop'), 2).alias('Correlation')).show()
+
+
+def question_12_report(df):
+    # Question 12 report;
+
+    (df.select('communityname', 
+			   'racepctblack', 
+			   'racePctWhite', 
+			   'racePctAsian', 
+			   'racePctHisp', 
+			   'ViolentCrimesPerPop')
+       .sort(F.desc('ViolentCrimesPerPop'))
+       .show(10))
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -85,6 +123,21 @@ if __name__ == "__main__":
 				   (F.when(F.col('agePct12t29').startswith('?'), 0)
 				     .otherwise(F.col('agePct12t29'))
 					 .cast('float').alias('agePct12t29')),
+				   (F.when(F.col('PctPolicWhite').startswith('?'), 0)
+				     .otherwise(F.col('PctPolicWhite'))
+					 .cast('float').alias('PctPolicWhite')),
+				   (F.when(F.col('medIncome').startswith('?'), 0)
+				     .otherwise(F.col('medIncome'))
+					 .cast('float').alias('medIncome')),
+				   (F.when(F.col('racePctWhite').startswith('?'), 0)
+				     .otherwise(F.col('racePctWhite'))
+					 .cast('float').alias('racePctWhite')),
+				   (F.when(F.col('racePctAsian').startswith('?'), 0)
+				     .otherwise(F.col('racePctAsian'))
+					 .cast('float').alias('racePctAsian')),
+				   (F.when(F.col('racePctHisp').startswith('?'), 0)
+				     .otherwise(F.col('racePctHisp'))
+					 .cast('float').alias('racePctHisp'))
 				   )
 
 	question_1_report(df)
@@ -93,3 +146,9 @@ if __name__ == "__main__":
 	question_4_report(df)
 	question_5_report(df)
 	question_6_report(df)
+	question_7_report(df)
+	question_8_report(df)
+	question_9_report(df)
+	question_10_report(df)
+	question_11_report(df)
+	question_12_report(df)
